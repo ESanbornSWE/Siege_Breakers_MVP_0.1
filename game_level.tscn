@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://44k1o2n5ippn"]
+
+[node name="GameLevel" type="Node2D"]
