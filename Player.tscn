@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://cbt5o1l5nml1f"]
+[gd_scene load_steps=61 format=3 uid="uid://cbt5o1l5nml1f"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_xqkgy"]
 [ext_resource type="Texture2D" uid="uid://dcqlp8cajumcm" path="res://Art/Tiny Adventure Pack/Character/Char_one/Idle/Char_idle_down.png" id="2_iosge"]
@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://cacqo7rolrecq" path="res://Art/Tiny Adventure Pack/Character/Char_one/Walk/Char_walk_up.png" id="9_vyxpf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8j51w"]
-size = Vector2(2.05, 3.35)
+size = Vector2(2.3, 3.5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d0tnn"]
 atlas = ExtResource("2_iosge")
@@ -397,21 +397,20 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5vefv"]
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_fjrr3"]
-radius = 39.5601
+radius = 44.0114
 
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(298, 184)
+position = Vector2(286, 173)
+collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_xqkgy")
 metadata/_edit_group_ = true
 
 [node name="EnvCollision" type="CollisionShape2D" parent="."]
-position = Vector2(-1.5, 3.5)
+position = Vector2(1, 2)
 scale = Vector2(20, 20)
 shape = SubResource("RectangleShape2D_8j51w")
-disabled = true
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -421,18 +420,23 @@ sprite_frames = SubResource("SpriteFrames_vq0rw")
 animation = &"Walk_Up"
 frame_progress = 0.131779
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
-root_node = NodePath("../AnimatedSprite2D")
-tree_root = SubResource("AnimationNodeAnimation_5vefv")
-
 [node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
 
 [node name="HurtboxShape" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("CircleShape2D_fjrr3")
+debug_color = Color(0.878431, 0.282353, 0.494118, 0.419608)
+
+[node name="RayCast2D" type="RayCast2D" parent="Hurtbox"]
+target_position = Vector2(108, 17)
+collision_mask = 4
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 0.3
 
-[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(96, -36)
+
 [connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]
-[connection signal="body_exited" from="Hurtbox" to="." method="_on_hurtbox_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

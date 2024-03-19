@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://bagciu16n8aid"]
+[gd_scene load_steps=40 format=3 uid="uid://bagciu16n8aid"]
 
 [ext_resource type="Script" path="res://mob.gd" id="1_nrqt4"]
 [ext_resource type="Texture2D" uid="uid://ddsjqge761er7" path="res://Art/Tiny Adventure Pack/Skeleton/Idle/Skel_idle_down.png" id="2_2sk4t"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b4su1xafmtn75" path="res://Art/Tiny Adventure Pack/Skeleton/Walk/Skel_walk_up.png" id="6_skf4l"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gi1v8"]
+radius = 26.0768
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_s3b6e"]
 atlas = ExtResource("2_2sk4t")
@@ -248,28 +249,30 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0u05g"]
-radius = 38.1182
-
-[sub_resource type="Curve2D" id="Curve2D_bcs30"]
+radius = 41.0488
 
 [node name="Mob" type="CharacterBody2D"]
+position = Vector2(757, 468)
+collision_layer = 4
 script = ExtResource("1_nrqt4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_gi1v8")
-disabled = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(5, 5)
 sprite_frames = SubResource("SpriteFrames_efl12")
 animation = &"Walk_Up"
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("CircleShape2D_0u05g")
+debug_color = Color(0.847059, 0.337255, 0.447059, 0.419608)
 
-[node name="Path2D" type="Path2D" parent="."]
-curve = SubResource("Curve2D_bcs30")
+[node name="Timer" type="Timer" parent="."]
+autostart = true
 
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="Hurtbox" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

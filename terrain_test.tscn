@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgy5wndbuw7n3"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jsiq3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p55jl"]
+size = Vector2(103, 88)
+
+[node name="Terrain_Test" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_jsiq3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(41.5, 34)
+shape = SubResource("RectangleShape2D_p55jl")

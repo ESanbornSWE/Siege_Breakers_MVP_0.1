@@ -31,18 +31,21 @@ func _physics_process(_delta):
 	
 
 
-
-
-func _on_hurtbox_area_entered(area):
+func hitflash():
+	var x = 0
+	while (x < 5):
+		sprite.hide()
+		$Timer.start() #timers two ways
+		await($Timer.timeout)
+		sprite.show()
+		await get_tree().create_timer(0.3).timeout
+		x += 1
 	pass
 
 
 func _on_hurtbox_body_entered(body):
-	sprite.hide()
-	#TODO add timer to disable this for a short time, blink character back into existence
+	hitflash()
 	pass # Replace with function body.
 
-
-func _on_hurtbox_body_exited(body):
+func _on_timer_timeout():
 	sprite.show()
-	pass # Replace with function body.
