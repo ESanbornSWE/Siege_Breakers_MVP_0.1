@@ -1,12 +1,11 @@
 extends CharacterBody2D
 
-@export var move_speed : float = 200
+@export var move_speed : float = 150
 @export var starting_direction : Vector2 = Vector2(0,1)
 
 @onready var sprite = $AnimatedSprite2D
 @onready var input_direction = null
 @onready var attacking = false
-@onready var tween = create_tween()
 
 func _physics_process(_delta):
 	#get input direction from player
@@ -23,35 +22,55 @@ func _physics_process(_delta):
 	else:
 		if attacking == false:
 			move_animation()
-		
+	
+	#reset_rotation()
 	move_and_slide()
-	
-	#Need better way to trigger and control tweens for all attacks.
-	tween.tween_property($AttackNode, "rotation", 2*PI, 10)
-
 
 	
-		
+func reset_rotation():
+	await get_tree().create_timer(0.2).timeout
+	$AttackNode.rotation = 0	
 
+#replace sprite.play with sword creation and tweens for rotation.
 func attack():
+	$AttackNode/Attack/Axe.show()
+	$AttackNode/Attack/CollisionShape2D.disabled = false
+	var tween = create_tween()
 	attacking = true
 	if input_direction == Vector2(-1,0): 
-		sprite.play("Attack_Left")
-		await(sprite.animation_finished)
+		$AttackNode.scale.x = 1
+		$AttackNode.scale.y = 1
+		$AttackNode.rotation = (PI/2)
+		tween.tween_property($AttackNode, "rotation", (-PI/8), (.3))
+		await(tween.finished)
 	elif input_direction == Vector2(1,0):
-		sprite.play("Attack_Right")
-		await(sprite.animation_finished)
+		$AttackNode.scale.x = -1
+		$AttackNode.scale.y = 1
+		$AttackNode.rotation = (-PI/2)
+		tween.tween_property($AttackNode, "rotation", (PI/8), (.3))
+		await(tween.finished)
 	elif input_direction == Vector2(0,-1):
-		sprite.play("Attack_Up")
-		await(sprite.animation_finished)
+		$AttackNode.scale.x = -1
+		$AttackNode.scale.y = -1
+		$AttackNode.rotation = (0)
+		tween.tween_property($AttackNode, "rotation", (-PI), (.3))
+		await(tween.finished)
 	elif input_direction == Vector2(0,1):
-		sprite.play("Attack_Down")
-		await(sprite.animation_finished)
+		$AttackNode.scale.x = 1
+		$AttackNode.scale.y = 1
+		$AttackNode.rotation = (0)
+		tween.tween_property($AttackNode, "rotation", -PI, (.2))
+		await(tween.finished)
 	else:
-		sprite.play("Attack_Down")
-		await(sprite.animation_finished)
+		$AttackNode.scale.x = 1
+		$AttackNode.scale.y = 1
+		$AttackNode.rotation = (0)
+		tween.tween_property($AttackNode, "rotation", -PI, (.2))
+		await(tween.finished)
 	attacking = false
-
+	await get_tree().create_timer(0.15).timeout
+	$AttackNode/Attack/Axe.hide()
+	$AttackNode/Attack/CollisionShape2D.disabled = true
 
 func move_animation():
 	if velocity == Vector2.ZERO:

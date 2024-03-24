@@ -1,7 +1,7 @@
 extends CharacterBody2D
 #Idle movement isn't working, nor are animations while chasing. Probably need to adjust the animations like an animation player tree
 #Chasing is at least working.
-@export var move_speed : float = 50
+@export var move_speed : float = 25
 @export var direction : Vector2 = Vector2(0,1)
 
 @onready var sprite = $AnimatedSprite2D
@@ -58,21 +58,28 @@ func _on_area_2d_body_entered(body):
 	pass # Replace with function body.
 
 func patrol():
-	velocity = direction
-	$Timer.start()
-	_on_timer_timeout()
-	pass
+	if in_range == false:
+		velocity = move_speed * direction
+		if direction == Vector2(0,1):
+			await get_tree().create_timer(2).timeout
+			direction = Vector2(0,-1)
+		else:
+			await get_tree().create_timer(2).timeout
+			direction = Vector2(0,1)
+	else:
+		pass
+	
 
 func chase():
 	player_position = player.position
 	direction = position.direction_to(player_position)
 
-func _on_timer_timeout():
-	if direction == Vector2(0,1):
-		direction = Vector2(0,-1)
-	else:
-		direction = Vector2(0,1)
-	$Timer.start()
+#func _on_timer_timeout():
+	#if direction == Vector2(0,1):
+		#direction = Vector2(0,-1)
+	#else:
+		#direction = Vector2(0,1)
+	#$Timer.start()
 
 
 func _on_detection_body_entered(body):
