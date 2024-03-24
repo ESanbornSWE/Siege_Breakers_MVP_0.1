@@ -1,20 +1,59 @@
 extends CharacterBody2D
 
 @export var move_speed : float = 200
-@export var starting_driection : Vector2 = Vector2(0,1)
+@export var starting_direction : Vector2 = Vector2(0,1)
 
 @onready var sprite = $AnimatedSprite2D
+@onready var input_direction = null
+@onready var attacking = false
+@onready var tween = create_tween()
 
 func _physics_process(_delta):
-	var input_direction = Vector2(
+	#get input direction from player
+	input_direction = Vector2(
 		Input.get_action_strength("right") - Input.get_action_strength("left"),
 		Input.get_action_strength("down") - Input.get_action_strength("up")
 	)
-
+	
+	#move in direction from input at predefined speed
 	velocity = input_direction * move_speed
 	
+	if Input.is_action_just_pressed("Attack"):
+		attack()
+	else:
+		if attacking == false:
+			move_animation()
+		
 	move_and_slide()
 	
+	#Need better way to trigger and control tweens for all attacks.
+	tween.tween_property($AttackNode, "rotation", 2*PI, 10)
+
+
+	
+		
+
+func attack():
+	attacking = true
+	if input_direction == Vector2(-1,0): 
+		sprite.play("Attack_Left")
+		await(sprite.animation_finished)
+	elif input_direction == Vector2(1,0):
+		sprite.play("Attack_Right")
+		await(sprite.animation_finished)
+	elif input_direction == Vector2(0,-1):
+		sprite.play("Attack_Up")
+		await(sprite.animation_finished)
+	elif input_direction == Vector2(0,1):
+		sprite.play("Attack_Down")
+		await(sprite.animation_finished)
+	else:
+		sprite.play("Attack_Down")
+		await(sprite.animation_finished)
+	attacking = false
+
+
+func move_animation():
 	if velocity == Vector2.ZERO:
 		sprite.play("Idle_Down")
 	else:
@@ -28,8 +67,6 @@ func _physics_process(_delta):
 			sprite.play("Walk_Down")
 		else:
 			pass
-	
-
 
 func hitflash():
 	var x = 0

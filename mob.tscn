@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://bagciu16n8aid"]
+[gd_scene load_steps=41 format=3 uid="uid://bagciu16n8aid"]
 
 [ext_resource type="Script" path="res://mob.gd" id="1_nrqt4"]
 [ext_resource type="Texture2D" uid="uid://ddsjqge761er7" path="res://Art/Tiny Adventure Pack/Skeleton/Idle/Skel_idle_down.png" id="2_2sk4t"]
@@ -248,11 +248,15 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_0u05g"]
-radius = 41.0488
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0jm8f"]
+radius = 22.0
+height = 78.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_byvlo"]
+radius = 141.76
 
 [node name="Mob" type="CharacterBody2D"]
-position = Vector2(757, 468)
+position = Vector2(649, 389)
 collision_layer = 4
 script = ExtResource("1_nrqt4")
 
@@ -266,13 +270,33 @@ animation = &"Walk_Up"
 
 [node name="Hurtbox" type="Area2D" parent="."]
 collision_layer = 4
+collision_mask = 8
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-shape = SubResource("CircleShape2D_0u05g")
+[node name="Hurtshape" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -5)
+shape = SubResource("CapsuleShape2D_0jm8f")
 debug_color = Color(0.847059, 0.337255, 0.447059, 0.419608)
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
 
-[connection signal="body_entered" from="Hurtbox" to="." method="_on_area_2d_body_entered"]
+[node name="Detection" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Detection"]
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_byvlo")
+disabled = true
+debug_color = Color(0.639216, 0.52549, 0, 0.419608)
+
+[node name="Speak" type="RichTextLabel" parent="."]
+offset_left = 16.0
+offset_top = -98.0
+offset_right = 125.0
+offset_bottom = -49.0
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Detection" to="." method="_on_detection_body_entered"]
+[connection signal="body_exited" from="Detection" to="." method="_on_detection_body_exited"]

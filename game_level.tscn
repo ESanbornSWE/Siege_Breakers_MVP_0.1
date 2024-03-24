@@ -7,10 +7,10 @@
 [node name="GameLevel" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_ohyrh")]
-position = Vector2(316, 176)
+position = Vector2(412, 354)
 
 [node name="Terrain_Test" parent="." instance=ExtResource("3_moi7c")]
 position = Vector2(456, 143)
 
 [node name="Mob" parent="." instance=ExtResource("2_bf3dk")]
-position = Vector2(495, 297)
+position = Vector2(498, 615)
