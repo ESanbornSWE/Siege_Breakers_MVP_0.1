@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://cbt5o1l5nml1f"]
+[gd_scene load_steps=66 format=3 uid="uid://cbt5o1l5nml1f"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_xqkgy"]
 [ext_resource type="Texture2D" uid="uid://dcqlp8cajumcm" path="res://Art/Tiny Adventure Pack/Character/Char_one/Idle/Char_idle_down.png" id="2_iosge"]
@@ -405,6 +405,13 @@ height = 74.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l7iqd"]
 size = Vector2(56, 25)
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_6kva2"]
+
+[sub_resource type="Theme" id="Theme_cxqpa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pttyu"]
+bg_color = Color(1, 0.164706, 0.188235, 1)
+
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(286, 173)
 collision_layer = 2
@@ -415,7 +422,6 @@ script = ExtResource("1_xqkgy")
 position = Vector2(1, 15.5)
 scale = Vector2(20, 20)
 shape = SubResource("RectangleShape2D_8j51w")
-metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -443,6 +449,7 @@ target_position = Vector2(96, -36)
 
 [node name="AttackNode" type="Node2D" parent="."]
 position = Vector2(-2, 22)
+metadata/_edit_group_ = true
 
 [node name="Attack" type="Area2D" parent="AttackNode"]
 position = Vector2(2, 13)
@@ -463,6 +470,19 @@ texture = ExtResource("10_3fq25")
 hframes = 6
 vframes = 6
 frame = 13
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+material = SubResource("CanvasItemMaterial_6kva2")
+offset_left = -36.0
+offset_top = -59.0
+offset_right = 38.0
+offset_bottom = -52.0
+theme = SubResource("Theme_cxqpa")
+theme_override_styles/fill = SubResource("StyleBoxFlat_pttyu")
+max_value = 5.0
+step = 1.0
+value = 5.0
+show_percentage = false
 
 [connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

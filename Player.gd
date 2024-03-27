@@ -6,6 +6,7 @@ extends CharacterBody2D
 @onready var sprite = $AnimatedSprite2D
 @onready var input_direction = null
 @onready var attacking = false
+@onready var health = $HealthBar.value
 
 func _physics_process(_delta):
 	#get input direction from player
@@ -101,7 +102,11 @@ func hitflash():
 
 func _on_hurtbox_body_entered(body):
 	hitflash()
-	pass # Replace with function body.
+	damage()
+	pass
 
-func _on_timer_timeout():
-	sprite.show()
+func damage():
+	update_heatlh(-1)
+
+func update_heatlh(update_val):
+	$HealthBar.value += update_val

@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://bagciu16n8aid"]
+[gd_scene load_steps=44 format=3 uid="uid://bagciu16n8aid"]
 
 [ext_resource type="Script" path="res://mob.gd" id="1_nrqt4"]
 [ext_resource type="Texture2D" uid="uid://ddsjqge761er7" path="res://Art/Tiny Adventure Pack/Skeleton/Idle/Skel_idle_down.png" id="2_2sk4t"]
@@ -255,6 +255,13 @@ height = 78.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_byvlo"]
 radius = 141.76
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_itu8y"]
+
+[sub_resource type="Theme" id="Theme_k5od5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgabo"]
+bg_color = Color(1, 0.164706, 0.188235, 1)
+
 [node name="Mob" type="CharacterBody2D"]
 position = Vector2(649, 389)
 collision_layer = 4
@@ -294,6 +301,19 @@ offset_left = 16.0
 offset_top = -98.0
 offset_right = 125.0
 offset_bottom = -49.0
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+material = SubResource("CanvasItemMaterial_itu8y")
+offset_left = -36.0
+offset_top = -59.0
+offset_right = 38.0
+offset_bottom = -52.0
+theme = SubResource("Theme_k5od5")
+theme_override_styles/fill = SubResource("StyleBoxFlat_sgabo")
+max_value = 5.0
+step = 1.0
+value = 5.0
+show_percentage = false
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
