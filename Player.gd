@@ -18,7 +18,7 @@ func _physics_process(_delta):
 	#move in direction from input at predefined speed
 	velocity = input_direction * move_speed
 	
-	if Input.is_action_just_pressed("Attack"):
+	if Input.is_action_just_pressed("Attack") && attacking == false:
 		attack()
 	else:
 		if attacking == false:
@@ -34,44 +34,48 @@ func reset_rotation():
 
 #replace sprite.play with sword creation and tweens for rotation.
 func attack():
-	$AttackNode/Attack/Axe.show()
-	$AttackNode/Attack/CollisionShape2D.disabled = false
-	var tween = create_tween()
-	attacking = true
-	if input_direction == Vector2(-1,0): 
-		$AttackNode.scale.x = 1
-		$AttackNode.scale.y = 1
-		$AttackNode.rotation = (PI/2)
-		tween.tween_property($AttackNode, "rotation", (-PI/8), (.3))
-		await(tween.finished)
-	elif input_direction == Vector2(1,0):
-		$AttackNode.scale.x = -1
-		$AttackNode.scale.y = 1
-		$AttackNode.rotation = (-PI/2)
-		tween.tween_property($AttackNode, "rotation", (PI/8), (.3))
-		await(tween.finished)
-	elif input_direction == Vector2(0,-1):
-		$AttackNode.scale.x = -1
-		$AttackNode.scale.y = -1
-		$AttackNode.rotation = (0)
-		tween.tween_property($AttackNode, "rotation", (-PI), (.3))
-		await(tween.finished)
-	elif input_direction == Vector2(0,1):
-		$AttackNode.scale.x = 1
-		$AttackNode.scale.y = 1
-		$AttackNode.rotation = (0)
-		tween.tween_property($AttackNode, "rotation", -PI, (.2))
-		await(tween.finished)
+	if $HealthBar.value > 0:
+		$AttackNode/Attack/Axe.show()
+		await get_tree().create_timer(.1).timeout
+		$AttackNode/Attack/CollisionShape2D.disabled = false
+		var tween = create_tween()
+		attacking = true
+		if sprite.animation == "Walk_Left": 
+			$AttackNode.scale.x = 1
+			$AttackNode.scale.y = 1
+			$AttackNode.rotation = (PI/2)
+			tween.tween_property($AttackNode, "rotation", (-PI/8), (.2))
+			await(tween.finished)
+		elif sprite.animation == "Walk_Right":
+			$AttackNode.scale.x = -1
+			$AttackNode.scale.y = 1
+			$AttackNode.rotation = (-PI/2)
+			tween.tween_property($AttackNode, "rotation", (PI/8), (.2))
+			await(tween.finished)
+		elif sprite.animation == "Walk_Up":
+			$AttackNode.scale.x = -1
+			$AttackNode.scale.y = -1
+			$AttackNode.rotation = (0)
+			tween.tween_property($AttackNode, "rotation", (-PI), (.2))
+			await(tween.finished)
+		elif sprite.animation == "Walk_Down":
+			$AttackNode.scale.x = 1
+			$AttackNode.scale.y = 1
+			$AttackNode.rotation = (0)
+			tween.tween_property($AttackNode, "rotation", -PI, (.2))
+			await(tween.finished)
+		else:
+			$AttackNode.scale.x = 1
+			$AttackNode.scale.y = 1
+			$AttackNode.rotation = (0)
+			tween.tween_property($AttackNode, "rotation", -PI, (.2))
+			await(tween.finished)
+		await get_tree().create_timer(0.1).timeout
+		$AttackNode/Attack/Axe.hide()
+		$AttackNode/Attack/CollisionShape2D.disabled = true
+		attacking = false
 	else:
-		$AttackNode.scale.x = 1
-		$AttackNode.scale.y = 1
-		$AttackNode.rotation = (0)
-		tween.tween_property($AttackNode, "rotation", -PI, (.2))
-		await(tween.finished)
-	attacking = false
-	await get_tree().create_timer(0.15).timeout
-	$AttackNode/Attack/Axe.hide()
-	$AttackNode/Attack/CollisionShape2D.disabled = true
+		pass
 
 func move_animation():
 	if velocity == Vector2.ZERO:
@@ -90,19 +94,22 @@ func move_animation():
 
 func hitflash():
 	var x = 0
-	while (x < 5):
-		sprite.hide()
-		$Timer.start() #timers two ways
-		await($Timer.timeout)
-		sprite.show()
-		await get_tree().create_timer(0.3).timeout
-		x += 1
-	pass
+	if $HealthBar.value > 0:
+		while (x < 5):
+			sprite.hide()
+			$Timer.start() #timers two ways
+			await($Timer.timeout)
+			sprite.show()
+			await get_tree().create_timer(0.3).timeout
+			x += 1
+		pass
+	else:
+		pass
 
 
 func _on_hurtbox_body_entered(body):
-	hitflash()
 	damage()
+	hitflash()
 	pass
 
 func damage():
@@ -110,3 +117,16 @@ func damage():
 
 func update_heatlh(update_val):
 	$HealthBar.value += update_val
+	if $HealthBar.value == 0:
+		death()
+	
+func death():
+	var tween = create_tween().set_parallel(true)
+	move_speed = 0
+	$Hurtbox.set_deferred("monitoring", false)
+	$EnvCollision.set_deferred("disabled", true)
+	sprite.hide()
+	$HealthBar.hide()
+	$Sprite2D.show()
+	tween.tween_property($Sprite2D, "rotation", (2*PI), (2))
+	tween.tween_property($Sprite2D, "scale", Vector2(0,0), 2)

@@ -10,6 +10,7 @@ extends CharacterBody2D
 var in_range = false
 @onready var player_position = player.position
 @onready var health = $HealthBar.value
+@onready var parent_pos = get_tree().current_scene.get_node("Mob").position
 
 func _physics_process(_delta):
 
@@ -43,7 +44,6 @@ func update_direction():
 	if in_range == true:
 		player_position = player.position
 		direction = position.direction_to(player_position)
-		print(direction)
 	else:
 		if direction == Vector2(0,1):
 			await get_tree().create_timer(1).timeout
@@ -59,17 +59,20 @@ func damage():
 func update_heatlh(update_val):
 	$HealthBar.value += update_val
 	if $HealthBar.value == 0:
-		queue_free()
+		death()
 
 func hitflash():
 	var x = 0
-	while (x < 5):
-		sprite.hide()
-		await get_tree().create_timer(0.3).timeout
-		sprite.show()
-		await get_tree().create_timer(0.3).timeout
-		x += 1
-	pass
+	if $HealthBar.value > 0:
+		while (x < 5):
+			sprite.hide()
+			await get_tree().create_timer(0.3).timeout
+			sprite.show()
+			await get_tree().create_timer(0.3).timeout
+			x += 1
+		pass
+	else:
+		pass
 
 func _on_area_2d_body_entered(body):
 	sprite.hide()
@@ -90,6 +93,18 @@ func _on_detection_body_exited(body):
 
 
 func _on_hurtbox_area_entered(area):
-	hitflash()
 	damage()
+	hitflash()
 	pass
+
+func death():
+	var scene = load("res://skel_death.tscn")
+	var instance = scene.instantiate()
+	add_child(instance)
+	instance.position = parent_pos
+	move_speed = 0
+	$AnimatedSprite2D.hide()
+	$Hurtbox.set_deferred("monitoring", false)
+	$EnvCollision.set_deferred("disabled", true)
+	await get_tree().create_timer(5).timeout
+	queue_free()

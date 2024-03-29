@@ -267,13 +267,13 @@ position = Vector2(649, 389)
 collision_layer = 4
 script = ExtResource("1_nrqt4")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="EnvCollision" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_gi1v8")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(5, 5)
 sprite_frames = SubResource("SpriteFrames_efl12")
-animation = &"Walk_Up"
+animation = &"Idle_Down"
 
 [node name="Hurtbox" type="Area2D" parent="."]
 collision_layer = 4
@@ -312,7 +312,7 @@ theme = SubResource("Theme_k5od5")
 theme_override_styles/fill = SubResource("StyleBoxFlat_sgabo")
 max_value = 5.0
 step = 1.0
-value = 5.0
+value = 1.0
 show_percentage = false
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

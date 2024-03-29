@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://cbt5o1l5nml1f"]
+[gd_scene load_steps=67 format=3 uid="uid://cbt5o1l5nml1f"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_xqkgy"]
 [ext_resource type="Texture2D" uid="uid://dcqlp8cajumcm" path="res://Art/Tiny Adventure Pack/Character/Char_one/Idle/Char_idle_down.png" id="2_iosge"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://daakyjiq7r5ic" path="res://Art/Tiny Adventure Pack/Character/Char_one/Walk/Char_walk_right.png" id="8_pkq1t"]
 [ext_resource type="Texture2D" uid="uid://cacqo7rolrecq" path="res://Art/Tiny Adventure Pack/Character/Char_one/Walk/Char_walk_up.png" id="9_vyxpf"]
 [ext_resource type="Texture2D" uid="uid://dmdgdt3jndc6l" path="res://Art/Sprout Lands - Sprites - Basic pack/Characters/Tools.png" id="10_3fq25"]
+[ext_resource type="Texture2D" uid="uid://dgxtpcl8fttgh" path="res://Art/Tiny Adventure Pack/Character/Char_one/Char_4_sides.png" id="11_3e5xg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8j51w"]
 size = Vector2(2.3, 1.75)
@@ -391,11 +392,6 @@ animations = [{
 "loop": true,
 "name": &"Walk_Up",
 "speed": 5.0
-}, {
-"frames": [],
-"loop": true,
-"name": &"default",
-"speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2px0d"]
@@ -427,7 +423,7 @@ shape = SubResource("RectangleShape2D_8j51w")
 texture_filter = 1
 scale = Vector2(5, 5)
 sprite_frames = SubResource("SpriteFrames_vq0rw")
-animation = &"Walk_Up"
+animation = &"Idle_Down"
 
 [node name="Hurtbox" type="Area2D" parent="."]
 collision_layer = 2
@@ -481,8 +477,14 @@ theme = SubResource("Theme_cxqpa")
 theme_override_styles/fill = SubResource("StyleBoxFlat_pttyu")
 max_value = 5.0
 step = 1.0
-value = 5.0
+value = 1.0
 show_percentage = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(5, 5)
+texture = ExtResource("11_3e5xg")
+hframes = 4
 
 [connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
