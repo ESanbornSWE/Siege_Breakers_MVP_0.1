@@ -8,6 +8,8 @@ extends CharacterBody2D
 @onready var attacking = false
 @onready var health = $HealthBar.value
 
+signal player_death
+
 func _physics_process(_delta):
 	#get input direction from player
 	input_direction = Vector2(
@@ -96,18 +98,20 @@ func hitflash():
 	var x = 0
 	if $HealthBar.value > 0:
 		while (x < 5):
+			$Hurtbox/HurtboxShape.disabled = true
 			sprite.hide()
 			$Timer.start() #timers two ways
 			await($Timer.timeout)
 			sprite.show()
 			await get_tree().create_timer(0.3).timeout
 			x += 1
+		$Hurtbox/HurtboxShape.disabled = false
 		pass
 	else:
 		pass
 
 
-func _on_hurtbox_body_entered(body):
+func _on_hurtbox_body_entered(_body):
 	damage()
 	hitflash()
 	pass
@@ -121,6 +125,7 @@ func update_heatlh(update_val):
 		death()
 	
 func death():
+	player_death.emit()
 	var tween = create_tween().set_parallel(true)
 	move_speed = 0
 	$Hurtbox.set_deferred("monitoring", false)
@@ -130,3 +135,12 @@ func death():
 	$Sprite2D.show()
 	tween.tween_property($Sprite2D, "rotation", (2*PI), (2))
 	tween.tween_property($Sprite2D, "scale", Vector2(0,0), 2)
+	
+func reset():
+	sprite.show()
+	$HealthBar.value = $HealthBar.max_value
+	$HealthBar.show()
+	$Hurtbox.set_deferred("monitoring", true)
+	$EnvCollision.set_deferred("disabled", false)
+	move_speed = 150
+	

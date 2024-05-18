@@ -1,16 +1,41 @@
-[gd_scene load_steps=4 format=3 uid="uid://44k1o2n5ippn"]
+[gd_scene load_steps=7 format=3 uid="uid://44k1o2n5ippn"]
 
+[ext_resource type="Script" path="res://game_level.gd" id="1_m1u38"]
 [ext_resource type="PackedScene" uid="uid://cbt5o1l5nml1f" path="res://Player.tscn" id="1_ohyrh"]
 [ext_resource type="PackedScene" uid="uid://bagciu16n8aid" path="res://mob.tscn" id="2_bf3dk"]
-[ext_resource type="PackedScene" uid="uid://dgy5wndbuw7n3" path="res://terrain_test.tscn" id="3_moi7c"]
+[ext_resource type="PackedScene" uid="uid://bndbct351q3xq" path="res://HUD.tscn" id="4_r1brt"]
+[ext_resource type="PackedScene" uid="uid://df7wvjwlq3yq5" path="res://borders.tscn" id="5_ccb8l"]
+
+[sub_resource type="Curve2D" id="Curve2D_71m3t"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -2, 0, 0, 0, 0, 0, -2, 0, 0, 0, 0, 0, 600, 0, 0, 0, 0, 0, 600, 600, 0, 0, 0, 0, 0, 600, 0, 0, 0, 0, 16, 64, 0, 0, 0, 0, 552, 64, 0, 0, 0, 0, 552, 536, 0, 0, 0, 0, 64, 528, 0, 0, 0, 0, 80, 136, 0, 0, 0, 0, 496, 120, 0, 0, 0, 0, 504, 440, 0, 0, 0, 0, 128, 432, 0, 0, 0, 0, 136, 224, 0, 0, 0, 0, 408, 232, 0, 0, 0, 0, 416, 360, 0, 0, 0, 0, 184, 336, 0, 0, 0, 0, -2, 0)
+}
+point_count = 18
 
 [node name="GameLevel" type="Node2D"]
+script = ExtResource("1_m1u38")
+mob_scene = ExtResource("2_bf3dk")
 
 [node name="Player" parent="." instance=ExtResource("1_ohyrh")]
-position = Vector2(241, 194)
+position = Vector2(288, 288)
 
-[node name="Terrain_Test" parent="." instance=ExtResource("3_moi7c")]
-position = Vector2(395, 148)
+[node name="Mob_Path" type="Path2D" parent="."]
+curve = SubResource("Curve2D_71m3t")
 
-[node name="Mob" parent="." instance=ExtResource("2_bf3dk")]
-position = Vector2(327, 455)
+[node name="Mob_Follow" type="PathFollow2D" parent="Mob_Path"]
+position = Vector2(-2.10793, 0)
+
+[node name="Mob_Timer" type="Timer" parent="."]
+
+[node name="Start_Timer" type="Timer" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("4_r1brt")]
+
+[node name="Borders" parent="." instance=ExtResource("5_ccb8l")]
+
+[node name="Mob_Parent" type="Node2D" parent="."]
+
+[connection signal="player_death" from="Player" to="." method="_on_player_player_death"]
+[connection signal="timeout" from="Mob_Timer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="Start_Timer" to="." method="_on_start_timer_timeout"]
+[connection signal="start_game" from="HUD" to="." method="_on_hud_start_game"]

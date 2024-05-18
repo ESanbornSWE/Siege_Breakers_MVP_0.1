@@ -262,8 +262,7 @@ radius = 141.76
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgabo"]
 bg_color = Color(1, 0.164706, 0.188235, 1)
 
-[node name="Mob" type="CharacterBody2D"]
-position = Vector2(649, 389)
+[node name="Mob" type="CharacterBody2D" groups=["Mobs"]]
 collision_layer = 4
 script = ExtResource("1_nrqt4")
 
@@ -303,6 +302,7 @@ offset_right = 125.0
 offset_bottom = -49.0
 
 [node name="HealthBar" type="ProgressBar" parent="."]
+visible = false
 material = SubResource("CanvasItemMaterial_itu8y")
 offset_left = -36.0
 offset_top = -59.0

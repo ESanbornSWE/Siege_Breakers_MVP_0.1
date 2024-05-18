@@ -10,9 +10,10 @@ bounce = 0.5
 radius = 26.0768
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_djhq2"]
-size = Vector2(20, 85)
+size = Vector2(20, 46)
 
 [node name="Skel_Death" type="Node2D"]
+position = Vector2(1, -15)
 
 [node name="RigidBody2D" type="RigidBody2D" parent="."]
 collision_layer = 16
@@ -20,11 +21,11 @@ collision_mask = 16
 physics_material_override = SubResource("PhysicsMaterial_ik1hv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
-position = Vector2(302, 216)
+position = Vector2(-1, 0)
 shape = SubResource("CircleShape2D_n76xy")
 
 [node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
-position = Vector2(302, 221)
+position = Vector2(-0.999969, 5.00002)
 scale = Vector2(5, 5)
 texture = ExtResource("1_pmi0t")
 
@@ -33,6 +34,6 @@ collision_layer = 16
 collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(304, 309)
-rotation = -1.5708
+position = Vector2(6.67572e-06, 63)
+rotation = -1.57079
 shape = SubResource("RectangleShape2D_djhq2")

@@ -10,7 +10,9 @@ extends CharacterBody2D
 var in_range = false
 @onready var player_position = player.position
 @onready var health = $HealthBar.value
-@onready var parent_pos = get_tree().current_scene.get_node("Mob").position
+@onready var parent = null
+
+signal mob_death
 
 func _physics_process(_delta):
 
@@ -74,7 +76,7 @@ func hitflash():
 	else:
 		pass
 
-func _on_area_2d_body_entered(body):
+func _on_area_2d_body_entered(_body):
 	sprite.hide()
 	pass # Replace with function body.
 
@@ -92,19 +94,26 @@ func _on_detection_body_exited(body):
 		$Speak.text = "???"
 
 
-func _on_hurtbox_area_entered(area):
+func _on_hurtbox_area_entered(_area):
 	damage()
 	hitflash()
 	pass
 
 func death():
+	mob_death.emit()
 	var scene = load("res://skel_death.tscn")
 	var instance = scene.instantiate()
-	add_child(instance)
-	instance.position = parent_pos
+	call_deferred("add_sibling", instance)
+	parent = self.global_position
+	instance.global_position = Vector2(parent.x, (parent.y))
+	print(instance.global_position)
 	move_speed = 0
 	$AnimatedSprite2D.hide()
+	$Detection.set_deferred("monitoring", false)
+	$Speak.hide()
+	$HealthBar.hide()
 	$Hurtbox.set_deferred("monitoring", false)
 	$EnvCollision.set_deferred("disabled", true)
-	await get_tree().create_timer(5).timeout
+	await get_tree().create_timer(2).timeout
 	queue_free()
+	instance.queue_free()
