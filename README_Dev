@@ -1,0 +1,27 @@
+This is a snapshot of the 0.1 version of the game I am developing.
+I created this project with the intent of learning Godot and improving my scripting skills.
+This is the list of requirements I made for what I considered the most basic parts of a game. The end product will be significantly different, but I felt that it was important to provide clear milestones in the development process.
+
+Menus
+    start game scene
+    game over scene
+Player
+    Move
+        Play move animations
+        environmental collisions
+    Attack
+        Play attack animations
+        attack hit box
+    Take damage
+        hurt box
+        hit flash
+        death
+Mob
+    Move/attack/dmg Same as player
+    pathfind to player
+    spawn in random or target zones
+    clear from memory after death
+
+I have greatly enjoyed making this project and have already learned some valuable lessons on project management, logical organization, and of course, scripting.
+Creating even a project as simple as this has been rewarding and has reminded me of why I got into tech in the first place.
+There's something special about hitting that run button and seeing lines of code spring to life.
